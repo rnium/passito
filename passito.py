@@ -34,7 +34,7 @@ softblue2 = "#2c7e96"
 splash_bg = "#3c5c5b"
 splash_txt_color = "#adbcdf"
 button_font = ("consolas", 13, "bold")
-button_bg = "#197A73"
+button_bg = "#036e72"
 labelfont = ("roboto", 14)
 labelfont_large = ("helvatica", 18, 'bold')
 labelfont_small = ("roboto", 12)
@@ -2366,8 +2366,8 @@ def list_command(event=None):
         return None
 
     list_w = Toplevel(root)
-    list_w.geometry(f'314x620+{int(width*3.3)}+{int(height*0.25)}')
-    list_w.title('database')
+    list_w.geometry(f'353x620+{int(width*3.3)}+{int(height*0.25)}')
+    list_w.title('Database')
     list_w.configure(bg=root_bg)
     list_w.transient(root)
     list_w.resizable(width=0, height=0)
@@ -2379,7 +2379,7 @@ def list_command(event=None):
     list_w.bind('<Right>', lambda evnt: idbox.focus_force())
     mainframe = Frame(list_w, bg=deepgreen)
     mainframe.place(x=-1, y=-1)
-    mylist = Listbox(mainframe, bg=root_bg, fg='#00C5CD', bd=0, width=23, relief='flat',
+    mylist = Listbox(mainframe, bg=root_bg, fg='#00C5CD', bd=0, width=26, relief='flat',
                      font=('segoe ui', 18), height=16, selectbackground=softblue2, selectforeground=mint)
 
     def not_selected():
@@ -2650,21 +2650,21 @@ def list_command(event=None):
                 pass
             return None
     # ///
-    f1 = Frame(list_w, bg=deepgreen, width=314, height=120)
+    f1 = Frame(list_w, bg=deepgreen, width=353, height=120)
     f1.place(x=0, y=528)
-    listget = Button(f1, text='Get Pass', command=list_getfnc, font=button_font, width=12,
+    listget = Button(f1, text='Get Pass', command=list_getfnc, font=button_font, width=14,
                      bg=button_bg, fg="#FFFFFF", bd=0, activebackground=splash_bg, relief='ridge',
                      cursor='dotbox', activeforeground=mint)
     listget.place(x=50, y=10)
     listget.bind('<Enter>', lambda event: on_enter(listget))
     listget.bind('<Leave>', lambda event: on_leave(listget))
-    gall_list_b = Button(f1, text='Get All', command=list_getallfnc, width=12, font=button_font, bg=button_bg,
+    gall_list_b = Button(f1, text='Get All', command=list_getallfnc, width=14, font=button_font, bg=button_bg,
                            fg="#FFFFFF", bd=0, activebackground=softblue2, relief='ridge', cursor='dotbox',
                            activeforeground='#ffffff')
-    gall_list_b.place(x=176, y=10)
+    gall_list_b.place(x=193, y=10)
     gall_list_b.bind('<Enter>', lambda event: on_enter(gall_list_b))
     gall_list_b.bind('<Leave>', lambda event: on_leave(gall_list_b))
-    close_b = Button(f1, text='Close', command=on_closing, font=button_font, width=26,
+    close_b = Button(f1, text='Close', command=on_closing, font=button_font, width=30,
                      bg=splash_bg, fg="#FFFFFF", bd=0, activebackground='red', relief='ridge',
                      activeforeground="#FFFFFF")
     close_b.place(x=50, y=50)
@@ -2692,24 +2692,24 @@ idbox.bind('<Shift-Right>', list_command)
 idbox.bind('<Shift-Down>', delete_command)
 wins = {}
 # Add
-addButton = Button(root, text='Add', font=button_font,command=add_command, bg=button_bg,
-                   height=2, width=10,fg="#FFFFFF", bd=0, activebackground=splash_bg, relief='ridge', cursor='dotbox',
+addButton = Button(root, text='Add', font=button_font,command=add_command, bg="#036e72",
+                   height=2, width=10,fg="#13f8ff", bd=0, activebackground=splash_bg, relief='ridge', cursor='dotbox',
                    activeforeground=mint)
 addButton.place(x=350, y=105)
 addButton.bind('<Enter>', lambda e: on_enter(button=addButton))
 addButton.bind('<Leave>', lambda e: on_leave(button=addButton))
 
 # list
-listButton = Button(root, text='List', font=button_font, bg="gray", height=2, command=list_command,
-                    width=10, fg="#FFFFFF", bd=0, activebackground=splash_bg,
+listButton = Button(root, text='ViewDB', font=button_font, bg=splash_bg, height=2, command=list_command,
+                    width=10, fg=mint, bd=0, activebackground='gray',
                     relief='ridge', cursor='dotbox', activeforeground=mint)
 listButton.place(x=450, y=105)
 listButton.bind('<Enter>', lambda e: on_enter(button=listButton, bg='#989898'))
-listButton.bind('<Leave>', lambda e: on_leave(button=listButton, bg='gray'))
+listButton.bind('<Leave>', lambda e: on_leave(button=listButton, bg=splash_bg))
 
 # Update
 updateButton = Button(root, text='Update', font=button_font, bg=button_bg, command=update_command, height=2, width=10,
-                      fg="#FFFFFF", bd=0, activebackground=splash_bg, relief='ridge', cursor='dotbox',
+                      fg="#13f8ff", bd=0, activebackground=splash_bg, relief='ridge', cursor='dotbox',
                       activeforeground=mint)
 updateButton.place(x=450, y=50)
 updateButton.bind('<Enter>', lambda e: on_enter(button=updateButton))
@@ -2717,15 +2717,15 @@ updateButton.bind('<Leave>', lambda e: on_leave(button=updateButton))
 
 # delete
 delButton = Button(root, text='Delete', font=button_font, command=delete_command, bg=button_bg,
-                   height=2, width=10, fg="#FFFFFF", bd=0, activebackground='red', relief='ridge',
+                   height=2, width=10, fg=mint, bd=0, activebackground='red', relief='ridge',
                    cursor='tcross', activeforeground="white")
 delButton.place(x=450, y=160)
 delButton.bind('<Enter>', lambda e: on_enter(button=delButton, bg=deepred))
-delButton.bind('<Leave>', lambda e: on_leave(button=delButton))
+delButton.bind('<Leave>', lambda e: on_leave(button=delButton, bg=button_bg))
 
 # backup
 backupButton = Button(root, text='Backup', command=backup_command,
-                      font=button_font, bg=button_bg, height=2, width=10, fg="#FFFFFF", bd=0,
+                      font=button_font, bg=button_bg, height=2, width=10, fg="#13f8ff", bd=0,
                       activebackground=splash_bg, relief='ridge', cursor='dotbox', activeforeground=mint)
 backupButton.place(x=550, y=105)
 backupButton.bind('<Enter>', lambda e: on_enter(button=backupButton))
