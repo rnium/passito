@@ -187,75 +187,6 @@ def decrypt_(cipher: str, key=current_key) -> str:
     return bytes_.decode()
 
 
-def reset_security_key():
-    ree = HdpiTk()
-    width_ = ree.winfo_screenmmwidth()
-    height_ = ree.winfo_screenheight()
-    ree.geometry(f'520x240+{int(width_ * 1.7)}+{int(height_ * 0.4)}')
-    ree.overrideredirect(True)
-    ree.configure(bg=deepgreen)
-    ree.attributes('-topmost', True)
-    ree.resizable(width=0, height=0)
-    ree.iconbitmap(applogo)
-    ree.focus_set()
-
-    load_img = Image.open(icon_dir / 'warn1.png')
-    warn_i = ImageTk.PhotoImage(load_img)
-
-    def continue_command(event=None):
-        got__security_key = idbox_.get()
-        if len(got__security_key) == 0:
-            f1 = Frame(ree, bg=deepgreen, bd=0)
-            f1.place(x=30, y=190)
-
-            Label(f1, image=warn_i, bg=deepgreen).pack(side=LEFT)
-            Label(f1, text='Enter correct security key', font=('segoe ui', 12, 'bold'), fg='yellow',
-                  bg=deepgreen, padx=5).pack(side=RIGHT)
-            idbox_.delete(0, END)
-            try:
-                ree.after(1500, lambda: clear_widget(widget=f1, window=ree))
-            except:
-                pass
-            return None
-        update_sysdata('security_key', got__security_key)
-        res_ = messagebox.showinfo(title='updated', message='security key updated\nnow restart passito')
-        if res_:
-            sys.exit()
-
-    # logo
-    s_logo = ImageTk.PhotoImage(Image.open(icon_dir / 'pg2.png'))
-    s_logo_label = Label(ree, image=s_logo, bg=deepgreen)
-    s_logo_label.place(x=10, y=10)
-
-    # other elements
-    _label_ = Label(ree, text="Invalid security key", bg=deepred, fg='white', font=("Seoge UI", 13, 'bold')
-                    , width=48)
-    _label_.place(x=17, y=50)
-    _label = Label(ree, text="Please enter correct security key, otherwise\n"
-                             "you won't be able to access data",
-                   bg=deepgreen, fg=mint, font=("Seoge UI", 12), justify=LEFT)
-    _label.place(x=15, y=95)
-
-    idbox_ = Entry(ree, width=35, font=boxfont, bg='#006666', fg='#1fff00', bd=0, insertbackground='#1fff00')
-    idbox_.place(x=30, y=150)
-    idbox_.focus_force()
-    idbox_.bind('<Return>', continue_command)
-
-    close_b = Button(ree, text='☓', font=('Segoe UI', 12), width=3, command=lambda: sys.exit(),
-                     bg=splash_bg, fg="#FFFFFF", bd=0, activebackground='red',
-                     activeforeground="white")
-    close_b.place(x=486, y=0)
-    close_b.bind('<Enter>', lambda event: on_enter(close_b, bg=deepred))
-    close_b.bind('<Leave>', lambda event: on_leave(close_b, bg=splash_bg))
-
-    continue_ = Button(ree, text='continue', bg='#005555', font=button_font, fg='#ffffff', bd=0, width=10,
-                       command=continue_command, activebackground='cyan', relief='flat', activeforeground="#0799c2")
-    continue_.place(x=390, y=190)
-    continue_.bind('<Enter>', lambda event: on_enter(continue_))
-    continue_.bind('<Leave>', lambda event: on_leave(continue_, bg='#005555'))
-    ree.mainloop()
-
-
 def setup_pass():
     setup_w = HdpiTk()
     s_width = setup_w.winfo_screenmmwidth()
@@ -370,6 +301,83 @@ def setup_pass():
     close_b.bind('<Leave>', lambda event: on_leave(close_b, bg=splash_bg))
     setup_w.mainloop()
     return success_value.get()
+
+
+def reset_security_key():
+    ree = HdpiTk()
+    width_ = ree.winfo_screenmmwidth()
+    height_ = ree.winfo_screenheight()
+    ree.geometry(f'520x320+{int(width_ * 1.7)}+{int(height_ * 0.4)}')
+    ree.overrideredirect(True)
+    ree.configure(bg=deepgreen)
+    ree.attributes('-topmost', True)
+    ree.resizable(width=0, height=0)
+    ree.iconbitmap(applogo)
+    ree.focus_set()
+
+    load_img = Image.open(icon_dir / 'warn1.png')
+    warn_i = ImageTk.PhotoImage(load_img)
+
+    def continue_command(event=None):
+        got__security_key = idbox_.get()
+        got__passkey = passkey_box.get()
+        if len(got__security_key) == 0 or len(got__passkey)==0:
+            f1 = Frame(ree, bg=deepgreen, bd=0)
+            f1.place(x=30, y=260)
+
+            Label(f1, image=warn_i, bg=deepgreen).pack(side=LEFT)
+            Label(f1, text='Fill all the entry', font=('segoe ui', 12, 'bold'), fg='yellow',
+                  bg=deepgreen, padx=5).pack(side=RIGHT)
+            idbox_.delete(0, END)
+            try:
+                ree.after(1500, lambda: clear_widget(widget=f1, window=ree))
+            except:
+                pass
+            return None
+        key = get_key(got__security_key)
+        _e_passkey = encrypt_(got__passkey, key)
+        update_sysdata('security_key', got__security_key)
+        update_sysdata('passkey', _e_passkey)
+        res_ = messagebox.showinfo(title='updated', message='security key updated\nnow restart passito')
+        if res_:
+            sys.exit()
+
+    # # logo
+    # s_logo = ImageTk.PhotoImage(Image.open(icon_dir / 'pg2.png'))
+    # s_logo_label = Label(ree, image=s_logo, bg=deepgreen)
+    # s_logo_label.place(x=10, y=10)
+
+    # other elements
+    _label_ = Label(ree, text="Invalid security key", bg=deepred, fg='white', font=("Seoge UI", 13, 'bold')
+                    , width=48)
+    _label_.place(x=17, y=50)
+    _label = Label(ree, text="Please enter correct security key, otherwise\n"
+                             "you won't be able to access data",
+                   bg=deepgreen, fg=mint, font=("Seoge UI", 12), justify=LEFT)
+    _label.place(x=15, y=95)
+
+    idbox_ = Entry(ree, width=35, font=boxfont, bg='#006666', fg='#1fff00', bd=0, insertbackground='#1fff00')
+    idbox_.place(x=30, y=150)
+    idbox_.focus_force()
+
+    close_b = Button(ree, text='☓', font=('Segoe UI', 12), width=3, command=lambda: sys.exit(),
+                     bg=splash_bg, fg="#FFFFFF", bd=0, activebackground='red',
+                     activeforeground="white")
+    close_b.place(x=486, y=0)
+    close_b.bind('<Enter>', lambda event: on_enter(close_b, bg=deepred))
+    close_b.bind('<Leave>', lambda event: on_leave(close_b, bg=splash_bg))
+    passkey_label = Label(ree, text="Enter passkey:",
+                   bg=deepgreen, fg=mint, font=("Seoge UI", 12), justify=LEFT)
+    passkey_label.place(x=30, y=190)
+    passkey_box = Entry(ree, width=35, font=boxfont, bg='#006666', fg='#1fff00', bd=0, insertbackground='#1fff00')
+    passkey_box.place(x=30, y=220)
+    passkey_box.bind('<Return>', continue_command)
+    continue_ = Button(ree, text='continue', bg='#005555', font=button_font, fg='#ffffff', bd=0, width=10,
+                       command=continue_command, activebackground='cyan', relief='flat', activeforeground="#0799c2")
+    continue_.place(x=390, y=260)
+    continue_.bind('<Enter>', lambda event: on_enter(continue_))
+    continue_.bind('<Leave>', lambda event: on_leave(continue_, bg='#005555'))
+    ree.mainloop()
 
 
 def clear_widget(widget, window):
@@ -757,7 +765,7 @@ def get_fnc(event=None):
     try:
         password = decrypt_(_e_password)
     except cryptography.fernet.InvalidToken:
-        pass
+        reset_security_key()
         return None
 
     pyperclip.copy(password)
