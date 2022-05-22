@@ -1785,6 +1785,20 @@ def update_command(event=None):
                     messagebox.showwarning('error', f'An error occurred\ninfo: {exc__}')
                 return None
         finish()
+    
+    def idbox_return(event=None):
+        all_id = db.get_id_name_list(conn)
+        raw_id_name = id_box.get()
+        if raw_id_name.isdigit():
+            test = int(raw_id_name)
+            if test > len(all_id) or test <= 0:
+                messagebox.showerror('invalid index', 'ID index is not valid')
+                id_box.focus_force()
+                return None
+            id_name = all_id[test - 1]
+            id_box.delete(0, END)
+            id_box.insert(0, id_name)
+        emailbox.focus_force()
 
     def update(event=None):
         all_id = db.get_id_name_list(conn)
@@ -1796,6 +1810,7 @@ def update_command(event=None):
                 id_box.focus_force()
                 return None
             id_name = all_id[test - 1]
+
         else:
             id_name = raw_id_name
 
@@ -1824,7 +1839,7 @@ def update_command(event=None):
                 except TclError:
                     pass
             return None
-        if check_value:
+        if check_value or len(email) < 1:
             credential = db.get_credential(conn, id_name)
             _e_prev_mail = credential['username']
             _e_password = encrypt_(password)
@@ -2055,7 +2070,7 @@ def update_command(event=None):
     id_box.place(x=70, y=50)
     wins['update'] = id_box
     id_box.configure(insertbackground=mint)
-    id_box.bind('<Return>', lambda ev=None: emailbox.focus_force())
+    id_box.bind('<Return>', lambda event=None: idbox_return())
     id_box.bind("<Down>", lambda ev: emailbox.focus_force())
     id_box.focus_force()
 
