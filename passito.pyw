@@ -338,9 +338,8 @@ def reset_security_key():
         _e_passkey = encrypt_(got__passkey, key)
         update_sysdata('security_key', got__security_key)
         update_sysdata('passkey', _e_passkey)
-        res_ = messagebox.showinfo(title='updated', message='security key updated\nnow restart passito')
-        if res_:
-            sys.exit()
+        mymessage(geo='380x120', labelpos_x=100, labelpos_y=35, artwork=icon_dir/'done.png', justify=LEFT,
+                    artpos_x=15, artpos_y=30, message=f"Security Key updated\n please restart")
 
     # # logo
     # s_logo = ImageTk.PhotoImage(Image.open(icon_dir / 'pg2.png'))
