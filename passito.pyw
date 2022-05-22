@@ -90,7 +90,8 @@ if not setup_dir.exists():
             'gp_length':12, 
             'security_key':security_key,
             'getall_posx':0,
-            'getall_posy':0
+            'getall_posy':0,
+            'backup_dir': str(Path.home()/'Documents/passito_backup'),
         }
         sysfile = str(setup_dir/'config.json')
         with open(sysfile, 'w') as f:
@@ -1748,11 +1749,8 @@ def update_command(event=None):
                    width=42)
     tlabel.place(x=0, y=0)
 
-    c_var = IntVar(update_window, 1)
-    cb1 = Checkbutton(update_window, variable=c_var, text='keep previous email/username', activeforeground="gray",
-                      activebackground=root_bg,bg=root_bg, fg='gray', bd=0, cursor='arrow', relief='ridge', onvalue=1,
-                      offvalue=0)
-    cb1.place(x=250, y=120)
+    cb1 = Label(update_window, text='leave empty to keep previous email/username',bg=root_bg, fg='gray')
+    cb1.place(x=160, y=120)
 
     def on_closing(force=False):
         def finish():
@@ -1817,10 +1815,9 @@ def update_command(event=None):
         email = emailbox.get()
         password = passwordbox.get()
         r_password = r_passwordbox.get()
-        check_value = c_var.get()
 
-        if len(id_name) == 0 or (check_value == 0 and len(email) == 0) or len(password) == 0 or len(r_password) == 0:
-            focus_empty_box(id_box, emailbox, passwordbox, r_passwordbox, update_d=True, check=check_value)
+        if len(id_name) == 0 or len(password) == 0 or len(r_password) == 0:
+            focus_empty_box(id_box, emailbox, passwordbox, r_passwordbox, update_d=True)
             return None
 
         elif id_name not in all_id:
@@ -1839,7 +1836,7 @@ def update_command(event=None):
                 except TclError:
                     pass
             return None
-        if check_value or len(email) < 1:
+        if len(email) < 1:
             credential = db.get_credential(conn, id_name)
             _e_prev_mail = credential['username']
             _e_password = encrypt_(password)
@@ -1901,15 +1898,11 @@ def update_command(event=None):
         user_info_label = Label(update_h_w, text="Leave this field empty if the email/username is unchanged\n"
                                                  "or enter the new email or username linked with the ID",
                                 bg=splash_bg, fg="#99e0f4", justify=LEFT, font=('roboto', 12))
-        user_info_label.place(x=165, y=85)
-        user_info_label2 = Label(update_h_w, text="and make sure to uncheck the checkbutton below the entry",
-                                 bg=splash_bg,
-                                 fg=mint, font=('roboto', 12))
-        user_info_label2.place(x=165, y=123)
+        user_info_label.place(x=165, y=90)
         user_info_label3 = Label(update_h_w, text="(example1: mynewmail@gmail.com)\n"
                                                   "(example2: MyNewUserName)", bg=splash_bg,
                                  fg="#99e0f4", justify=LEFT, font=('roboto', 12))
-        user_info_label3.place(x=165, y=143)
+        user_info_label3.place(x=165, y=130)
 
         # Password
         pass_label_ = Label(update_h_w, image=pass_icon, bg=splash_bg)
@@ -2154,7 +2147,6 @@ def delete_command(event=None):
                 mymessage(geo='400x120', labelpos_x=100, labelpos_y=48, artwork=icon_dir / 'del2.png',
                           artpos_x=20, artpos_y=30, message=f"Credentials Deleted Successfully", to_be_focused=id_box)
             else:
-                messagebox.showinfo('passito', 'Process aborted')
                 try:
                     id_box.focus_force()
                 except:
@@ -2250,6 +2242,7 @@ def backup_command():
         backup_path = Path(backup_path)
         try:
             db.backup_passito(conn, backup_path)
+            update_sysdata('backup_dir', str(backup_path))
             mymessage(geo='400x120', labelpos_x=110, labelpos_y=47,
                       artwork=icon_dir / 'bu.png', to_be_focused=br_window,
                       artpos_x=20, artpos_y=30, message=f'Backup created successfully\n', delay=3)
@@ -2258,7 +2251,9 @@ def backup_command():
             return None
 
     # Backup
+    bkp_path = get_sysdata('backup_dir')
     pathbox = Entry(br_window, width=32, font=("consolas", 17), bg=softblue, fg="#daffff", bd=0)
+    pathbox.insert(0, bkp_path)
     pathbox.place(x=20, y=65)
 
     pathbutton = Button(br_window, text='path', font=button_font, width=5, command=backup_path_command,
@@ -2658,7 +2653,6 @@ def list_command(event=None):
                     pass
             return None
         else:
-            messagebox.showinfo('passito', 'Process aborted')
             try:
                 list_w.focus_force()
             except TclError:
